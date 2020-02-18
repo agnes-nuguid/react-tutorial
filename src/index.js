@@ -27,6 +27,15 @@ class Board extends React.Component {
         };
     }
 
+    handleClick(i) {
+        // we use .slice to create a copy of the squares
+        const squares = this.state.squares.slice();
+        // changes the squares[i] value to 'X'
+        squares[i] = 'X';
+        // Updates the this.state.squares array
+        this.setState({squares: squares});
+    }
+
     renderSquare(i) {
         // Add the parentheses so JS doesn't insert a semicolon after return and break our code
         // We're passing 2 props from Board to Square: value and onClick
