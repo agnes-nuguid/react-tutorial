@@ -27,6 +27,12 @@ class Board extends React.Component {
     handleClick(i) {
         // we use .slice to create a copy of the squares
         const squares = this.state.squares.slice();
+
+        // Will exit if there is a winner or Square is already marked[to avoid overriding the previous X or O]
+        if(calculateWinner(this.state.squares) || squares[i]) {
+            return;
+        }
+
         // Will change X | O marker based on the xIsNext
         squares[i] = this.state.xIsNext ? 'X' : 'O';
         this.setState({
@@ -49,8 +55,17 @@ class Board extends React.Component {
     }
 
     render() {
-        // Displays whose turn it is
-        const status = 'Next player: ' + (this.state.xIsNext ? 'X': 'O');
+        // Checks and saves in the variable winner for the winner
+        const winner = calculateWinner(this.state.squares);
+
+        let status;
+        // Status shows if there is a winner:
+        if(winner) {
+            status = 'Winner is: ' + winner
+        } else {
+            // Else it displays whose turn it is
+            status = 'Next player: ' + (this.state.xIsNext ? 'X': 'O');
+        }
 
         return (
             <div>
@@ -95,3 +110,34 @@ ReactDOM.render(
     <Game />,
     document.getElementById('root')
 );
+
+function calculateWinner(squares) {
+
+    // Positions in the Board that need to be monitored for a winner
+    const lines = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
+    ];
+
+    // Loops in each of the Winner line combinations
+    for (let i = 0; i < lines.length; i++) {
+        // Defines each line to what we need to compare
+        const [a, b, c] = lines[i];
+
+        // Checks if the Square is marked, and if all 3 squares have the same value
+        if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+
+            // returns the value of the Square | the Winner
+            return squares[a];
+        }
+    }
+
+    // If after looping it didn't find a winning combination, don't return anything.
+    return null;
+}
