@@ -55,6 +55,7 @@ class Game extends React.Component {
         super(props);
         this.state = {
             history: [{
+                // Initializes move [null, null]
                 move: Array(2).fill(null),
                 squares: Array(9).fill(null)                
             }],
@@ -84,8 +85,9 @@ class Game extends React.Component {
         // Will change X | O marker based on the xIsNext
         squares[i] = this.state.xIsNext ? 'X' : 'O';
         this.setState({
-            // Updates History with the latest squares
+            // Updates History with the latest squares and move
             history: history.concat([{
+                // Move: [col, row]
                 move: [(i % 3) + 1, Math.floor(i / 3) + 1],
                 squares: squares
             }]),
@@ -119,13 +121,19 @@ class Game extends React.Component {
         // Shows Past Moves
         const moves = history.map((step, move) => {
             const desc = move ?
-                // Button description will include the Move#
+                // Button description will include the Move# and step.move
                 'Go to move #' + move + ': Move(col, row): ('+ step.move + ')':
                 // Else, intialize to:
                 'Go to game start';
             return (
                 <li key={move}>
-                    <button onClick={() => this.jumpTo(move)}>{desc}</button>
+                    <button
+                        // Adds active class if specific move is the same as the stepNumber(selected)
+                        className={move === this.state.stepNumber ? 'active' : ''}
+                        onClick={() => this.jumpTo(move)}
+                    >
+                    {desc}
+                    </button>
                 </li>
             );
         });

@@ -48,3 +48,8 @@ ol, ul {
 .game-info {
     margin-left: 20px;
 }
+
+/* Bolds the currently selected item in the move list */
+.active {
+    font-weight: bold;
+}
