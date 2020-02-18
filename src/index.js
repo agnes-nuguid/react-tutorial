@@ -55,7 +55,8 @@ class Game extends React.Component {
         super(props);
         this.state = {
             history: [{
-                squares: Array(9).fill(null)
+                move: Array(2).fill(null),
+                squares: Array(9).fill(null)                
             }],
             // Initializes the step/move we are in
             stepNumber: 0,
@@ -85,6 +86,7 @@ class Game extends React.Component {
         this.setState({
             // Updates History with the latest squares
             history: history.concat([{
+                move: [(i % 3) + 1, Math.floor(i / 3) + 1],
                 squares: squares
             }]),
             // Updates the stepNumber to the current total number of moves made
@@ -118,7 +120,7 @@ class Game extends React.Component {
         const moves = history.map((step, move) => {
             const desc = move ?
                 // Button description will include the Move#
-                'Go to move #' + move :
+                'Go to move #' + move + ': Move(col, row): ('+ step.move + ')':
                 // Else, intialize to:
                 'Go to game start';
             return (
