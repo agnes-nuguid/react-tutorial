@@ -57,6 +57,8 @@ class Game extends React.Component {
             history: [{
                 squares: Array(9).fill(null)
             }],
+            // Initializes the step/move we are in
+            stepNumber: 0,
             xIsNext: true
         };
     }
@@ -64,7 +66,8 @@ class Game extends React.Component {
     // Moved from the board to handle the Game History
     handleClick(i) {
         // Defines current history
-        const history = this.state.history;
+        // After user makes another move, .slice will remove all proceeding history after the stepNumber+1 
+        const history = this.state.history.slice(0, this.state.stepNumber + 1);
 
         // Defines the latest squares as the current squares displayed
         const current = history[history.length - 1];
@@ -84,8 +87,19 @@ class Game extends React.Component {
             history: history.concat([{
                 squares: squares
             }]),
+            // Updates the stepNumber to the current total number of moves made
+            stepNumber: history.length,
             // Flips xIsNext boolean value every time the board is clicked
             xIsNext: !this.state.xIsNext
+        });
+    }
+
+    jumpTo(step) {
+        this.setState({
+            // Updates the stepNumber to what was selected in the history
+            stepNumber: step,
+            // Updates whose turn it is since it is alternating, modulo can be used
+            xIsNext: (step % 2) === 0
         });
     }
 
@@ -93,8 +107,9 @@ class Game extends React.Component {
         // Defines current history
         const history = this.state.history;
 
-        // Defines the latest squares displayed as the current squares 
-        const current = history[history.length - 1];
+        // Defines the latest squares displayed as the current squares\
+        // Updated to display the squares the user selected from the Moves history 
+        const current = history[this.state.stepNumber];
 
         // Checks and stores winner
         const winner = calculateWinner(current.squares);
