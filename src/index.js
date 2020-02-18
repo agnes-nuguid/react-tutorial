@@ -3,21 +3,15 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 class Square extends React.Component {
-    // Initializes the state
-    constructor(props) {
-        super(props);
-        this.state = {
-            value: null
-        };
-    }
     render() {
         return (
             <button 
                 className="square"
-                // Changes the square's value to 'X'
-                onClick={() => this.setState({value: 'X'})
-            }>
-                {this.state.value}
+                // calls the onClick function passed from Board
+                onClick={() => this.props.onClick()}
+            >
+                    
+                {this.props.value}
             </button>
         );
     }
@@ -34,7 +28,14 @@ class Board extends React.Component {
     }
 
     renderSquare(i) {
-        return <Square value={this.state.squares[i]} />;
+        // Add the parentheses so JS doesn't insert a semicolon after return and break our code
+        // We're passing 2 props from Board to Square: value and onClick
+        return (
+            <Square 
+                value={this.state.squares[i]} 
+                onClick={() => this.handleClick(i)}
+            />
+        );
     }
 
     render() {
