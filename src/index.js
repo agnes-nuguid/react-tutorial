@@ -18,17 +18,23 @@ class Board extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            squares: Array(9).fill(null)
+            squares: Array(9).fill(null),
+            // Setup that 'X' is default first player
+            xIsNext: true
         };
     }
 
     handleClick(i) {
         // we use .slice to create a copy of the squares
         const squares = this.state.squares.slice();
-        // changes the squares[i] value to 'X'
-        squares[i] = 'X';
-        // Updates the this.state.squares array
-        this.setState({squares: squares});
+        // Will change X | O marker based on the xIsNext
+        squares[i] = this.state.xIsNext ? 'X' : 'O';
+        this.setState({
+            // Updates the this.state.squares array
+            squares: squares,
+            // Flips xIsNext boolean value every time the board is clicked
+            xIsNext: !this.state.xIsNext
+        });
     }
 
     renderSquare(i) {
@@ -43,7 +49,8 @@ class Board extends React.Component {
     }
 
     render() {
-        const status = 'Next player: X';
+        // Displays whose turn it is
+        const status = 'Next player: ' + (this.state.xIsNext ? 'X': 'O');
 
         return (
             <div>
