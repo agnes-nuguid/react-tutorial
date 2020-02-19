@@ -62,6 +62,8 @@ class Game extends React.Component {
                 move: Array(2).fill(null),
                 squares: Array(9).fill(null)                
             }],
+            // Initializes the sorting
+            sortingIsAsc: true,
             // Initializes the step/move we are in
             stepNumber: 0,
             xIsNext: true
@@ -110,6 +112,13 @@ class Game extends React.Component {
         });
     }
 
+    handleSorting() {
+        this.setState({
+            // Flips sortIsAsc boolean value every time the sort button is clicked
+            sortingIsAsc: !this.state.sortingIsAsc
+        });
+    }
+
     render() {
         // Defines current history
         const history = this.state.history;
@@ -125,21 +134,30 @@ class Game extends React.Component {
         const moves = history.map((step, move) => {
             const desc = move ?
                 // Button description will include the Move# and step.move
-                'Go to move #' + move + ': Move(col, row): ('+ step.move + ')':
+                'Go to Move #' + move + ': ' :
                 // Else, intialize to:
                 'Go to game start';
             return (
-                <li key={move}>
+                <div key={move}>
                     <button
                         // Adds active class if specific move is the same as the stepNumber(selected)
                         className={move === this.state.stepNumber ? 'active' : ''}
                         onClick={() => this.jumpTo(move)}
                     >
                     {desc}
-                    </button>
-                </li>
+                    </button>{ move === 0 ? '' : ': (' + step.move + ')'}
+                </div>
             );
         });
+
+        let arrow;
+        if (this.state.sortingIsAsc) {
+            moves.sort();
+            arrow = '↑';
+        } else {
+            moves.reverse();
+            arrow = '↓';
+        }
 
         let status;
         // Status shows if there is a winner:
@@ -160,7 +178,8 @@ class Game extends React.Component {
                 </div>
                 <div className="game-info">
                     <div>{status}</div>
-                    <ol>{moves}</ol>
+                    <div><button onClick={() => this.handleSorting()}>Sort {arrow}</button></div>
+                    <div className="history">{moves}</div>
                 </div>
             </div>
         );
