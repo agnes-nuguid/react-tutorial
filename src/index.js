@@ -5,8 +5,13 @@ import './index.css';
 // Changed to a function component since it only renders and does not have its own state
 function Square(props) {
     return (
-        // shortened onClick after modifying Square to a function component
-        <button className="square" onClick={props.onClick}>
+        
+        <button 
+            // either 'square' | 'square winner'
+            className={props.className}
+            // shortened onClick after modifying Square to a function component
+            onClick={props.onClick}
+        >
             {props.value}
         </button>
     );
@@ -18,6 +23,8 @@ class Board extends React.Component {
         // Add the parentheses so JS doesn't insert a semicolon after return and break our code
         return (
             <Square 
+                // Will check if the square is included in the winning combination
+                className={this.props.winningSquares.includes(s) ? 'square winner' : 'square'}
                 // We're passing 2 props from Game > Board > Square: value and onClick
                 value={this.props.squares[s]}
                 onClick={() => this.props.onClick(s)}
@@ -162,7 +169,7 @@ class Game extends React.Component {
         let status;
         // Status shows if there is a winner:
         if(winner) {
-            status = 'Winner is: ' + winner;
+            status = 'Winner is: ' + winner[0];
         } else {
             // Else it displays whose turn it is
             status = 'Next player: ' + (this.state.xIsNext ? 'X': 'O');
@@ -173,6 +180,8 @@ class Game extends React.Component {
                 <div className="game-board">
                     <Board 
                         squares={current.squares}
+                        // Pass on the winning squares if there is a winner
+                        winningSquares={winner ? winner[1] : []}
                         onClick={(i) => this.handleClick(i)}
                     />
                 </div>
@@ -213,8 +222,8 @@ function calculateWinner(squares) {
         // Checks if the Square is marked, and if all 3 squares have the same value
         if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
 
-            // returns the value of the Square | the Winner
-            return squares[a];
+            // Returns the value of the Square and the winning line
+            return [squares[a], lines[i]];
         }
     }
 
