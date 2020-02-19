@@ -14,37 +14,40 @@ function Square(props) {
 
 class Board extends React.Component {
 
-    renderSquare(i) {
+    renderSquare(s) {
         // Add the parentheses so JS doesn't insert a semicolon after return and break our code
-        // We're passing 2 props from Game > Board > Square: value and onClick
         return (
             <Square 
-                value={this.props.squares[i]} 
-                onClick={() => this.props.onClick(i)}
+                // We're passing 2 props from Game > Board > Square: value and onClick
+                value={this.props.squares[s]}
+                onClick={() => this.props.onClick(s)}
+                // Added key since squares is now a rendered list
+                key={s}
             />
         );
     }
 
     render() {
         return (
-            <div>
-                <div className="board-row">
-                    {this.renderSquare(0)}
-                    {this.renderSquare(1)}
-                    {this.renderSquare(2)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(3)}
-                    {this.renderSquare(4)}
-                    {this.renderSquare(5)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(6)}
-                    {this.renderSquare(7)}
-                    {this.renderSquare(8)}
-                </div>
-            </div>
-        );
+            <div> {
+                // Loops into 3 rows, define each as row
+                [0, 1, 2].map((row) => {
+                    return (
+                        <div 
+                            className="board-row"
+                            // Defines a key for each row
+                            key={row}
+                        > {
+                            // Loop into 3 columns, define each as column
+                            [0, 1, 2].map((column) => {
+
+                                return this.renderSquare(3 * row + column);
+                            })
+                        } </div>
+                    );
+                })
+            } </div>
+        );        
     }
 }
 
