@@ -170,6 +170,9 @@ class Game extends React.Component {
         // Status shows if there is a winner:
         if(winner) {
             status = 'Winner is: ' + winner[0];
+        // If the board is already filled up and no winner
+        } else if(this.state.stepNumber === 9) {
+            status = 'It\'s a draw!' ;
         } else {
             // Else it displays whose turn it is
             status = 'Next player: ' + (this.state.xIsNext ? 'X': 'O');
